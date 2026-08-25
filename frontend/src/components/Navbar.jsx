@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Phone, Mail, Menu, X, Compass, Sparkles } from "lucide-react";
 
+import logo  from "../assets/logo.png"
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
@@ -48,20 +49,15 @@ const Navbar = () => {
       <nav className="bg-white/95 backdrop-blur-md border-b border-[#162E93]/20 shadow-xs py-3.5 px-4 sm:px-8 flex justify-between items-center relative z-50">
         
         {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-2 group">
-          <div className="bg-gradient-to-br from-[#34A99D] to-[#458393] text-white p-2.5 rounded-2xl shadow-md shadow-[#2F2FE4]/25 group-hover:scale-105 transition-transform duration-300">
-            <Compass size={22} className="text-white" />
-          </div>
-          <div>
-            <span className="text-xl font-black text-slate-900 leading-none block">
-              Ishika
-            </span>
-            <span className="text-[10px] tracking-widest text-[#34A99D] uppercase font-black block">
-              TOUR & TRAVELS
-            </span>
-          </div>
-        </Link>
+       <Link to="/" className="flex items-center gap-2 group">
+  <img
+    src={logo}
+    alt="Ishika Tour & Travels"
+    className="w-29 h-12 object-contain rounded-xl group-hover:scale-105 transition-transform duration-300"
+  />
 
+
+</Link>
         {/* Desktop Nav Links */}
         <div className="hidden lg:flex items-center gap-8 font-extrabold text-xs sm:text-sm text-slate-700">
           {navLinks.map((link) => (
