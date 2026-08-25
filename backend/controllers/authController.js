@@ -2,37 +2,8 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// @desc Register User / Admin
-exports.registerUser = async (req, res) => {
-  try {
-    const { name, email, password, role } = req.body;
-
-    let user = await User.findOne({ email });
-    if (user) {
-      return res.status(400).json({ success: false, message: 'User already exists' });
-    }
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    user = await User.create({
-      name,
-      email,
-      password: hashedPassword,
-      role: role || 'user'
-    });
-
-    res.status(201).json({
-      success: true,
-      message: 'Account created successfully'
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-// @desc Login User / Admin
-exports.loginUser = async (req, res) => {
+// @desc Login User/Admin
+const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -46,14 +17,13 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Invalid Credentials' });
     }
 
-    // JWT Token Generate
     const token = jwt.sign(
       { id: user._id, role: user.role },
-      process.env.JWT_SECRET || 'secretkey123',
-      { expiresIn: '1d' }
+      process.env.JWT_SECRET || 'supersecretkey12345',
+      { expiresIn: '7d' }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       token,
       user: {
@@ -64,6 +34,10 @@ exports.loginUser = async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
+};
+
+module.exports = {
+  loginUser
 };

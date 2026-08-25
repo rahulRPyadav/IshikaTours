@@ -1,43 +1,49 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import ContactUs from './pages/ContactUs';
+import Footer from './components/Footer';
+import ScrollToTop from './components/ScrollToTop';import ProtectedRoute from './components/ProtectedRoute';
+
+// Pages
+import Home from './pages/Home';
 import About from './pages/About';
-import AdminDashboard from './pages/AdminDashboard';
-import AdminLogin from './pages/AdminLogin';
 import TourList from './pages/TourList';
 import TourDetail from './pages/TourDetail';
-import ProtectedRoute from './components/ProtectedRoute';
+import Contact from './pages/ContactUs';
 import Testimonials from './pages/Testimonials';
-import Footer from './components/Footer';
-import Home from './pages/Home';
-import AuthPage from './pages/AuthPage';
+import AdminDashboard from './pages/AdminDashboard';
+
+const AppLayout = () => {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
+  return (
+    <>
+      <ScrollToTop />
+      {/* Public Navbar hides on Admin */}
+      {!isAdminRoute && <Navbar />}
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/testimonials" element={<Testimonials />} />
+        <Route path="/tours" element={<TourList />} />
+        <Route path="/tours/:slug" element={<TourDetail />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+       <Route path="/admin" element={<AdminDashboard />} />
+      </Routes>
+
+      {/* Public Footer hides on Admin */}
+      {!isAdminRoute && <Footer />}
+    </>
+  );
+};
 
 function App() {
   return (
     <Router>
-      <Navbar />
-      <Routes>
-       <Route path="/" element={<Home />} />
-        <Route path="/tours" element={<TourList />} />
-        <Route path="/tours/:slug" element={<TourDetail />} />
-        <Route path="/contact" element={<ContactUs />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
-        
-        {/* Protected Admin Route */}
-        <Route 
-          path="/admin" 
-          element={
-            <ProtectedRoute>
-              <AdminDashboard />
-            </ProtectedRoute>
-          } 
-        />
-        <Route path="/testimonials" element={<Testimonials />} />
-        <Route path="/login" element={<AuthPage />} />
-      </Routes>
-      <Footer />
+      <AppLayout />
     </Router>
   );
 }

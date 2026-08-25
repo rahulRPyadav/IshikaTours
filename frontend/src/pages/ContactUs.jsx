@@ -101,7 +101,7 @@ const Contact = () => {
 
           {/* Card 2 - Email */}
           <a
-            href="mailto:rahulk37255@gmail.com?subject=Travel%20Inquiry%20-%20Ishika%20Tours"
+            href="mailto:ishika.travels4379@gmail.com?subject=Travel%20Inquiry%20-%20Ishika%20Tours"
             className="bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm sm:shadow-md border border-[#34A99D]/20 flex items-center sm:items-start space-x-3.5 sm:space-x-4 active:scale-95 sm:active:scale-100 hover:shadow-xl transition-all duration-300 group cursor-pointer"
           >
             <div className="bg-[#FFF3C8] text-[#458393] p-3 sm:p-3.5 rounded-xl sm:rounded-2xl group-hover:bg-[#34A99D] group-hover:text-white transition duration-300 flex-shrink-0">
@@ -112,7 +112,7 @@ const Contact = () => {
                 Email Us
               </h3>
               <p className="text-[#34A99D] font-bold text-xs sm:text-sm my-0.5 sm:my-1 truncate">
-                rahulk37255@gmail.com
+                ishika.travels4379@gmail.com
               </p>
               <p className="text-[10px] sm:text-[11px] text-slate-400 font-medium truncate">
                 Click to send email

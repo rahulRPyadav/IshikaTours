@@ -11,20 +11,19 @@ connectDB();
 const app = express();
 
 // Middlewares
-app.use(express.json());
 app.use(cors());
-
-
-
-// Test Route
-app.get('/', (req, res) => {
-    res.send('Ishika Tour & Travels API is Running...');
-});
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Main API Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/tours', require('./routes/tourRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
+
+// Test Route
+app.get('/', (req, res) => {
+    res.send('Ishika Tour & Travels API is Running...');
+});
 
 // Start Server
 const PORT = process.env.PORT || 5000;

@@ -5,7 +5,8 @@ const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER || 'ranand.tech@gmail.com',
+    user: process.env.EMAIL_USER
+     || 'ishika.travels4379@gmail.com',
     pass: process.env.EMAIL_PASS
   }
 });
@@ -29,7 +30,8 @@ exports.createBooking = async (req, res) => {
     // Send Mail Notification to Admin
     const mailOptions = {
       from: email,
-      to: process.env.EMAIL_USER || 'ranand.tech@gmail.com',
+      to: process.env.EMAIL_USER 
+      || 'ishika.travels4379@gmail.com',
       subject: `🚨 New Booking Request - ${tourName}`,
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
@@ -106,7 +108,7 @@ exports.updateBookingStatus = async (req, res) => {
 
           <p style="color: #555; font-size: 13px;">Ishika Tour & Travels team aapko jald hi travel itinerary aur further details ke liye call karegi.</p>
           <hr style="border: none; border-top: 1px solid #eee; margin: 15px 0;" />
-          <p style="color: #777; font-size: 12px; margin: 0;">Kisi bhi query ke liye humse sampark karein: <strong>+91 7357121156</strong></p>
+          <p style="color: #777; font-size: 12px; margin: 0;">Kisi bhi query ke liye humse sampark karein: <strong>+91 7891604638</strong></p>
           <p style="color: #34A99D; font-weight: bold; margin-top: 5px;">Ishika Tour & Travels</p>
         </div>
       `;
@@ -118,7 +120,7 @@ exports.updateBookingStatus = async (req, res) => {
           <p style="color: #555; font-size: 14px;">Namaste <strong>${updated.customerName}</strong>,</p>
           <p style="color: #555; font-size: 14px;">Aapka tour package request <strong>${updated.tourName}</strong> cancel kar diya gaya hai.</p>
           
-          <p style="color: #777; font-size: 12px; margin-top: 15px;">Agar koi issue ho ya aap doosra package plan karna chahte hain toh call karein: <strong>+91 7357121156</strong></p>
+          <p style="color: #777; font-size: 12px; margin-top: 15px;">Agar koi issue ho ya aap doosra package plan karna chahte hain toh call karein: <strong>+91 7891604638</strong></p>
           <p style="color: #458393; font-weight: bold; margin-top: 5px;">Ishika Tour & Travels</p>
         </div>
       `;
@@ -127,7 +129,7 @@ exports.updateBookingStatus = async (req, res) => {
     // Customer Email sending trigger
     if (updated.email && emailSubject) {
       const customerMailOptions = {
-        from: `"Ishika Tour & Travels" <${process.env.EMAIL_USER || 'ranand.tech@gmail.com'}>`,
+        from: `"Ishika Tour & Travels" <${process.env.EMAIL_USER || 'ishika.travels4379@gmail.com'}>`,
         to: updated.email,
         subject: emailSubject,
         html: emailHtml

@@ -10,11 +10,17 @@ exports.getTours = async (req, res) => {
   }
 };
 
-// @desc Get Single Tour by Slug
+// @desc Get Single Tour by Slug OR ID
 exports.getTourBySlug = async (req, res) => {
   try {
-    const tour = await Tour.findOne({ slug: req.params.slug });
-    if (!tour) return res.status(404).json({ message: 'Tour not found' });
+    const { slug } = req.params;
+    let tour = await Tour.findOne({ slug: slug });
+    
+    if (!tour && slug.match(/^[0-9a-fA-F]{24}$/)) {
+      tour = await Tour.findById(slug);
+    }
+
+    if (!tour) return res.status(404).json({ success: false, message: 'Tour not found' });
     res.status(200).json(tour);
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -24,19 +30,16 @@ exports.getTourBySlug = async (req, res) => {
 // @desc Create New Tour Package
 exports.createTour = async (req, res) => {
   try {
-    const { title, location, duration, price, category, rating, image, description, inclusions } = req.body;
+    const { title, location, duration, city, image, description, inclusions } = req.body;
     
-    // Simple Slug generation from title
-    const slug = title.toLowerCase().replace(/[^a-zA-Z0-0 ]/g, "").replace(/\s+/g, "-");
+    const slug = title.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, "-");
 
     const newTour = await Tour.create({
       title,
       slug,
       location,
       duration,
-      price,
-      category,
-      rating: rating || 4.5,
+      city: city || 'Jaipur',
       image,
       description,
       inclusions
