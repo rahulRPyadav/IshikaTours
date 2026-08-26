@@ -1,16 +1,35 @@
 const bcrypt = require('bcryptjs');
-const User = require('./models/User'); // aapka user/admin model
+// User model import karein (jo bhi aapka path ho)
+const User = require('./models/User'); 
 
-app.get('/api/create-admin-once', async (req, res) => {
-  const exists = await User.findOne({ email: 'ishika.travels4379@gmail.com' });
-  if (exists) return res.send("Admin already exists!");
-  
-  const hashedPassword = await bcrypt.hash('Admin@1234', 10);
-  await User.create({
-    name: 'Admin',
-    email: 'ishika.travels4379@gmail.com',
-    password: hashedPassword,
-    role: 'admin'
-  });
-  res.send("Admin created successfully! Email: ishika.travels4379@gmail.com, Pass: Admin@1234");
+// Temporary 1-Click Admin Creator Route
+app.get('/api/create-admin-now', async (req, res) => {
+  try {
+    const adminEmail = 'ishika.travels4379@gmail.com';
+    const adminPassword = 'Admin@1234';
+
+    // Delete existing admin if any to avoid conflict
+    await User.deleteOne({ email: adminEmail });
+
+    // Hash Password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(adminPassword, salt);
+
+    // Create New Admin
+    const newAdmin = await User.create({
+      name: 'Ishika Admin',
+      email: adminEmail,
+      password: hashedPassword,
+      role: 'admin'
+    });
+
+    res.status(200).json({
+      success: true,
+      message: '✅ Admin created successfully!',
+      email: adminEmail,
+      password: adminPassword
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
