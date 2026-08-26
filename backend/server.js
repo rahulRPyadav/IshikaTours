@@ -9,10 +9,32 @@ dotenv.config();
 connectDB();
 
 const app = express();
-const port = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5000;
+
+// 1. CORS CONFIGURATION (Render Frontend + Localhost Support)
+const allowedOrigins = [
+  'https://ishikatours-1-frontend.onrender.com',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Fallback to allow requests without blocking
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Pre-flight OPTIONS handler for Login / Auth Requests
+app.options('*', cors());
 
 // Middlewares
-app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
@@ -27,7 +49,6 @@ app.get('/', (req, res) => {
 });
 
 // Start Server
-const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
 });
