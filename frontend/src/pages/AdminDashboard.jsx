@@ -65,7 +65,8 @@ const AdminDashboard = () => {
     e.preventDefault();
     setLoginError("");
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      
+      const res = await axios.post("https://ishikatours-1.onrender.com/api/auth/login", {
         email: loginEmail,
         password: loginPassword,
       });
@@ -87,8 +88,8 @@ const AdminDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const tourRes = await axios.get("http://localhost:5000/api/tours");
-      const bookingRes = await axios.get("http://localhost:5000/api/bookings");
+      const tourRes = await axios.get("https://ishikatours-1.onrender.com/api/tours");
+      const bookingRes = await axios.get("https://ishikatours-1.onrender.com/api/bookings");
       setTours(tourRes.data);
       setBookings(bookingRes.data);
     } catch (err) {
@@ -109,7 +110,7 @@ const AdminDashboard = () => {
 
   const handleStatusChange = async (id, status) => {
     try {
-      await axios.put(`http://localhost:5000/api/bookings/${id}/status`, {
+      await axios.put(`https://ishikatours-1.onrender.com/api/bookings/${id}/status`, {
         status,
       });
       fetchData();
@@ -121,7 +122,7 @@ const AdminDashboard = () => {
   const handleDeleteTour = async (id) => {
     if (window.confirm("Are you sure you want to delete this tour package?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/tours/${id}`);
+        await axios.delete(`https://ishikatours-1.onrender.com/api/tours/${id}`);
         fetchData();
       } catch (err) {
         console.error("Delete Error:", err);
@@ -140,7 +141,7 @@ const AdminDashboard = () => {
           ? formData.inclusions.split(",").map((item) => item.trim())
           : [],
       };
-      await axios.post("http://localhost:5000/api/tours", payload);
+      await axios.post("https://ishikatours-1.onrender.com/api/tours", payload);
       alert("Tour package created successfully!");
       setShowAddModal(false);
       setFormData({

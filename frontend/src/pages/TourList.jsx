@@ -172,7 +172,7 @@ const TourList = () => {
   // ];
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/tours')
+    axios.get('https://ishikatours-1.onrender.com/api/tours')
       .then(res => {
         if (res.data && res.data.length > 0) {
           setTours(res.data);

@@ -33,7 +33,7 @@ const TourDetail = () => {
     setLoadingTour(true);
     setError(false);
 
-    axios.get(`http://localhost:5000/api/tours/${tourIdentifier}`)
+    axios.get(`https://ishikatours-1.onrender.com/api/tours/${tourIdentifier}`)
       .then((res) => {
         if (res.data) {
           setTour(res.data);
@@ -63,7 +63,7 @@ const TourDetail = () => {
     setBookingLoading(true);
 
     try {
-      await axios.post('http://localhost:5000/api/bookings', {
+      await axios.post('https://ishikatours-1.onrender.com/api/bookings', {
         tourId: tour?._id,
         tourName: tour?.title,
         ...formData
