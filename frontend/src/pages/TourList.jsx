@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Building2, Utensils, Camera, Car, ArrowRight, 
-  Sparkles, Phone, MessageCircle, MapPin, ArrowLeft, Compass
+  Sparkles, Phone, MessageCircle, MapPin, ArrowLeft
 } from 'lucide-react';
 import axios from 'axios';
+
+//Change Base API URL only here:
+const API_BASE_URL = 'https://ishikatours-1.onrender.com';
 
 const TourList = () => {
   const [tours, setTours] = useState([]);
@@ -55,124 +58,124 @@ const TourList = () => {
   ];
 
   // 2. DEFAULT SPOTS FOR ALL CITIES
-  // const defaultCityTours = [
-  //   // JAIPUR
-  //   {
-  //     _id: 'jp1',
-  //     title: 'Hawa Mahal & Jal Mahal City Sightseeing Tour',
-  //     city: 'Jaipur',
-  //     location: 'Hawa Mahal • Jal Mahal • City Palace • Jantar Mantar',
-  //     duration: '1 Full Day',
-  //     image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=800'
-  //   },
-  //   {
-  //     _id: 'jp2',
-  //     title: 'Nahargarh Sunset & Jaigarh Fort Night View Tour',
-  //     city: 'Jaipur',
-  //     location: 'Nahargarh Fort Top • Jaigarh World Cannon • Jal Mahal Lights',
-  //     duration: '5 - 6 Hours (Evening)',
-  //     image: 'https://images.unsplash.com/photo-1605649487212-47bdab064df8?q=80&w=800'
-  //   },
-  //   {
-  //     _id: 'jp3',
-  //     title: 'Amer Fort Elephant & Royal Heritage Tour',
-  //     city: 'Jaipur',
-  //     location: 'Amer Fort • Panna Meena Stepwell • Anokhi Museum • Jal Mahal',
-  //     duration: 'Full Day (8 Hrs)',
-  //     image: 'https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=800'
-  //   },
-  //   {
-  //     _id: 'jp4',
-  //     title: 'Chokhi Dhani Ethnic Rajasthani Village Experience',
-  //     city: 'Jaipur',
-  //     location: 'Chokhi Dhani Resort • Folk Dance • Camel Rides • Traditional Thali',
-  //     duration: 'Evening (5:30 PM - 11:00 PM)',
-  //     image: 'https://images.unsplash.com/photo-1615836245337-f5b9b2303f10?q=80&w=800'
-  //   },
-  //   {
-  //     _id: 'jp5',
-  //     title: 'Albert Hall Museum & Birla Mandir Evening Tour',
-  //     city: 'Jaipur',
-  //     location: 'Albert Hall Museum • Birla Mandir • Moti Dungri Ganesh Mandir',
-  //     duration: '4 - 5 Hours',
-  //     image: 'https://images.unsplash.com/photo-1588714477688-cf28a50e94f7?q=80&w=800'
-  //   },
+  const defaultCityTours = [
+    // JAIPUR
+    {
+      _id: 'jp1',
+      title: 'Hawa Mahal & Jal Mahal City Sightseeing Tour',
+      city: 'Jaipur',
+      location: 'Hawa Mahal • Jal Mahal • City Palace • Jantar Mantar',
+      duration: '1 Full Day',
+      image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=800'
+    },
+    {
+      _id: 'jp2',
+      title: 'Nahargarh Sunset & Jaigarh Fort Night View Tour',
+      city: 'Jaipur',
+      location: 'Nahargarh Fort Top • Jaigarh World Cannon • Jal Mahal Lights',
+      duration: '5 - 6 Hours (Evening)',
+      image: 'https://images.unsplash.com/photo-1605649487212-47bdab064df8?q=80&w=800'
+    },
+    {
+      _id: 'jp3',
+      title: 'Amer Fort Elephant & Royal Heritage Tour',
+      city: 'Jaipur',
+      location: 'Amer Fort • Panna Meena Stepwell • Anokhi Museum • Jal Mahal',
+      duration: 'Full Day (8 Hrs)',
+      image: 'https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=800'
+    },
+    {
+      _id: 'jp4',
+      title: 'Chokhi Dhani Ethnic Rajasthani Village Experience',
+      city: 'Jaipur',
+      location: 'Chokhi Dhani Resort • Folk Dance • Camel Rides • Traditional Thali',
+      duration: 'Evening (5:30 PM - 11:00 PM)',
+      image: 'https://images.unsplash.com/photo-1615836245337-f5b9b2303f10?q=80&w=800'
+    },
+    {
+      _id: 'jp5',
+      title: 'Albert Hall Museum & Birla Mandir Evening Tour',
+      city: 'Jaipur',
+      location: 'Albert Hall Museum • Birla Mandir • Moti Dungri Ganesh Mandir',
+      duration: '4 - 5 Hours',
+      image: 'https://images.unsplash.com/photo-1588714477688-cf28a50e94f7?q=80&w=800'
+    },
 
-  //   // SIKAR
-  //   {
-  //     _id: 'sk1',
-  //     title: 'Khatu Shyam Ji VIP Darshan & Dedicated Taxi Tour',
-  //     city: 'Sikar',
-  //     location: 'Khatu Shyam Ji Mandir • Shyam Kund • Toran Dwar',
-  //     duration: '1 Day (Jaipur/Sikar to Khatu)',
-  //     image: 'https://images.unsplash.com/photo-1609766857041-ed402ea8069a?q=80&w=800'
-  //   },
-  //   {
-  //     _id: 'sk2',
-  //     title: 'Jeen Mata Mandir & Harsh Nath Mountain Peak Tour',
-  //     city: 'Sikar',
-  //     location: 'Jeen Mata Temple • Harsh Parvat Windmills • Ancient Shiv Mandir',
-  //     duration: '1 Full Day',
-  //     image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?q=80&w=800'
-  //   },
-  //   {
-  //     _id: 'sk3',
-  //     title: 'Khatu Shyam Ji + Jeen Mata + Salasar Balaji Tri-Darshan',
-  //     city: 'Sikar',
-  //     location: 'Khatu Shyam Ji • Jeen Mata • Salasar Balaji Mandir',
-  //     duration: '1 to 2 Days',
-  //     image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=800'
-  //   },
-  //   {
-  //     _id: 'sk4',
-  //     title: 'Shekhawati Heritage Painted Havelis & Fort Tour',
-  //     city: 'Sikar',
-  //     location: 'Laxmangarh Fort • Mandawa Fresco Havelis • Sikar Clock Tower',
-  //     duration: '1 Full Day',
-  //     image: 'https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=800'
-  //   },
+    // SIKAR
+    {
+      _id: 'sk1',
+      title: 'Khatu Shyam Ji VIP Darshan & Dedicated Taxi Tour',
+      city: 'Sikar',
+      location: 'Khatu Shyam Ji Mandir • Shyam Kund • Toran Dwar',
+      duration: '1 Day (Jaipur/Sikar to Khatu)',
+      image: 'https://images.unsplash.com/photo-1609766857041-ed402ea8069a?q=80&w=800'
+    },
+    {
+      _id: 'sk2',
+      title: 'Jeen Mata Mandir & Harsh Nath Mountain Peak Tour',
+      city: 'Sikar',
+      location: 'Jeen Mata Temple • Harsh Parvat Windmills • Ancient Shiv Mandir',
+      duration: '1 Full Day',
+      image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?q=80&w=800'
+    },
+    {
+      _id: 'sk3',
+      title: 'Khatu Shyam Ji + Jeen Mata + Salasar Balaji Tri-Darshan',
+      city: 'Sikar',
+      location: 'Khatu Shyam Ji • Jeen Mata • Salasar Balaji Mandir',
+      duration: '1 to 2 Days',
+      image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=800'
+    },
+    {
+      _id: 'sk4',
+      title: 'Shekhawati Heritage Painted Havelis & Fort Tour',
+      city: 'Sikar',
+      location: 'Laxmangarh Fort • Mandawa Fresco Havelis • Sikar Clock Tower',
+      duration: '1 Full Day',
+      image: 'https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=800'
+    },
 
-  //   // UDAIPUR
-  //   {
-  //     _id: 'ud1',
-  //     title: 'City Palace & Lake Pichola Royal Boat Tour',
-  //     city: 'Udaipur',
-  //     location: 'City Palace • Lake Pichola Boat Ride • Jagdish Temple',
-  //     duration: '1 Full Day',
-  //     image: 'https://images.unsplash.com/photo-1615836245337-f5b9b2303f10?q=80&w=800'
-  //   },
-  //   {
-  //     _id: 'ud2',
-  //     title: 'Sajjangarh Monsoon Palace & Fateh Sagar Lake Tour',
-  //     city: 'Udaipur',
-  //     location: 'Sajjangarh Fort • Fateh Sagar Lake • Saheliyon Ki Bari',
-  //     duration: '1 Day',
-  //     image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=800'
-  //   },
+    // UDAIPUR
+    {
+      _id: 'ud1',
+      title: 'City Palace & Lake Pichola Royal Boat Tour',
+      city: 'Udaipur',
+      location: 'City Palace • Lake Pichola Boat Ride • Jagdish Temple',
+      duration: '1 Full Day',
+      image: 'https://images.unsplash.com/photo-1615836245337-f5b9b2303f10?q=80&w=800'
+    },
+    {
+      _id: 'ud2',
+      title: 'Sajjangarh Monsoon Palace & Fateh Sagar Lake Tour',
+      city: 'Udaipur',
+      location: 'Sajjangarh Fort • Fateh Sagar Lake • Saheliyon Ki Bari',
+      duration: '1 Day',
+      image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=800'
+    },
 
-  //   // JODHPUR
-  //   {
-  //     _id: 'jd1',
-  //     title: 'Mehrangarh Fort & Jaswant Thada Blue City Tour',
-  //     city: 'Jodhpur',
-  //     location: 'Mehrangarh Fort • Jaswant Thada • Clock Tower & Blue Alleys',
-  //     duration: '1 Full Day',
-  //     image: 'https://images.unsplash.com/photo-1588714477688-cf28a50e94f7?q=80&w=800'
-  //   },
+    // JODHPUR
+    {
+      _id: 'jd1',
+      title: 'Mehrangarh Fort & Jaswant Thada Blue City Tour',
+      city: 'Jodhpur',
+      location: 'Mehrangarh Fort • Jaswant Thada • Clock Tower & Blue Alleys',
+      duration: '1 Full Day',
+      image: 'https://images.unsplash.com/photo-1588714477688-cf28a50e94f7?q=80&w=800'
+    },
 
-  //   // PUSHKAR
-  //   {
-  //     _id: 'pk1',
-  //     title: 'Jagatpita Brahma Temple & Pushkar Desert Safari Tour',
-  //     city: 'Pushkar',
-  //     location: 'Brahma Temple • Pushkar Holy Lake • Desert Dune Camel Ride',
-  //     duration: '1 Full Day',
-  //     image: 'https://images.unsplash.com/photo-1597074866923-dc0589150358?q=80&w=800'
-  //   }
-  // ];
+    // PUSHKAR
+    {
+      _id: 'pk1',
+      title: 'Jagatpita Brahma Temple & Pushkar Desert Safari Tour',
+      city: 'Pushkar',
+      location: 'Brahma Temple • Pushkar Holy Lake • Desert Dune Camel Ride',
+      duration: '1 Full Day',
+      image: 'https://images.unsplash.com/photo-1597074866923-dc0589150358?q=80&w=800'
+    }
+  ];
 
   useEffect(() => {
-    axios.get('https://ishikatours-1.onrender.com/api/tours')
+    axios.get(`${API_BASE_URL}/api/tours`)
       .then(res => {
         if (res.data && res.data.length > 0) {
           setTours(res.data);
@@ -359,7 +362,6 @@ const TourList = () => {
               onClick={() => openCityTours(dest.id)}
               className="relative rounded-3xl overflow-hidden cursor-pointer h-96 transition-all duration-300 flex flex-col justify-between p-6 group border border-slate-200 shadow-md hover:shadow-2xl hover:border-[#34A99D] hover:-translate-y-1.5"
             >
-              {/* Main City Image: Clean display with bottom readability gradient */}
               <img 
                 src={dest.img} 
                 alt={dest.name} 
@@ -367,14 +369,12 @@ const TourList = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent"></div>
 
-              {/* Top Badge */}
               <div className="relative z-10 flex justify-between items-center">
                 <span className="bg-black/40 backdrop-blur-md text-[#FFF3C8] text-[11px] font-black px-3.5 py-1 rounded-full uppercase tracking-wider border border-white/20 shadow-xs">
                   {dest.totalTours}
                 </span>
               </div>
 
-              {/* Bottom Card Content */}
               <div className="relative z-10">
                 <h3 className="text-2xl font-black text-white leading-tight mb-1">{dest.name}</h3>
                 <p className="text-xs text-[#FFF3C8] font-bold mb-2">{dest.tagline}</p>

@@ -6,6 +6,9 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 
+//Change Base API URL only here:
+const API_BASE_URL = 'https://ishikatours-1.onrender.com';
+
 const TourDetail = () => {
   const { slug, id } = useParams();
   const tourIdentifier = slug || id;
@@ -33,7 +36,7 @@ const TourDetail = () => {
     setLoadingTour(true);
     setError(false);
 
-    axios.get(`https://ishikatours-1.onrender.com/api/tours/${tourIdentifier}`)
+    axios.get(`${API_BASE_URL}/api/tours/${tourIdentifier}`)
       .then((res) => {
         if (res.data) {
           setTour(res.data);
@@ -63,7 +66,7 @@ const TourDetail = () => {
     setBookingLoading(true);
 
     try {
-      await axios.post('https://ishikatours-1.onrender.com/api/bookings', {
+      await axios.post(`${API_BASE_URL}/api/bookings`, {
         tourId: tour?._id,
         tourName: tour?.title,
         ...formData
@@ -188,7 +191,7 @@ const TourDetail = () => {
           <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 relative shadow-2xl border border-[#34A99D]/20">
             <button 
               onClick={() => { setShowBookingModal(false); setBookingSuccess(false); }}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 bg-slate-100 w-8 h-8 rounded-full flex items-center justify-center"
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 bg-slate-100 w-8 h-8 rounded-full flex items-center justify-center cursor-pointer"
             >
               ✕
             </button>
@@ -204,7 +207,7 @@ const TourDetail = () => {
                 </p>
                 <button 
                   onClick={() => { setShowBookingModal(false); setBookingSuccess(false); }}
-                  className="mt-6 bg-[#458393] hover:bg-[#34A99D] text-white px-8 py-3 rounded-xl text-xs font-black transition"
+                  className="mt-6 bg-[#458393] hover:bg-[#34A99D] text-white px-8 py-3 rounded-xl text-xs font-black transition cursor-pointer"
                 >
                   Close
                 </button>
@@ -268,7 +271,7 @@ const TourDetail = () => {
                       <input 
                         type="number" 
                         min="1" 
-                        max="50"
+                        max="50" 
                         required 
                         value={formData.guests}
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium focus:outline-none focus:border-[#34A99D]"
@@ -280,7 +283,7 @@ const TourDetail = () => {
                   <button 
                     type="submit" 
                     disabled={bookingLoading}
-                    className="w-full bg-[#458393] hover:bg-[#34A99D] text-white font-extrabold py-3 rounded-2xl transition duration-300 mt-2 text-xs sm:text-sm shadow-md"
+                    className="w-full bg-[#458393] hover:bg-[#34A99D] text-white font-extrabold py-3 rounded-2xl transition duration-300 mt-2 text-xs sm:text-sm shadow-md cursor-pointer"
                   >
                     {bookingLoading ? 'Submitting...' : 'Send Inquiry Request 🚀'}
                   </button>

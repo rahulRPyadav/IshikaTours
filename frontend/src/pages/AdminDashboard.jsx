@@ -22,6 +22,9 @@ import {
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 
+// Change Base API URL only here:
+const API_BASE_URL = 'https://ishikatours-1.onrender.com';
+
 const AdminDashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginEmail, setLoginEmail] = useState("");
@@ -65,12 +68,11 @@ const AdminDashboard = () => {
     e.preventDefault();
     setLoginError("");
     try {
-      
-      const res = await axios.post("https://ishikatours-1.onrender.com/api/auth/login", {
+      const res = await axios.post(`${API_BASE_URL}/api/auth/login`, {
         email: loginEmail,
         password: loginPassword,
       });
-      if (res.data.success) {
+      if (res.data.success || res.data.token) {
         localStorage.setItem("adminToken", res.data.token);
         setIsAuthenticated(true);
         fetchData();
@@ -88,8 +90,8 @@ const AdminDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const tourRes = await axios.get("https://ishikatours-1.onrender.com/api/tours");
-      const bookingRes = await axios.get("https://ishikatours-1.onrender.com/api/bookings");
+      const tourRes = await axios.get(`${API_BASE_URL}/api/tours`);
+      const bookingRes = await axios.get(`${API_BASE_URL}/api/bookings`);
       setTours(tourRes.data);
       setBookings(bookingRes.data);
     } catch (err) {
@@ -110,7 +112,7 @@ const AdminDashboard = () => {
 
   const handleStatusChange = async (id, status) => {
     try {
-      await axios.put(`https://ishikatours-1.onrender.com/api/bookings/${id}/status`, {
+      await axios.put(`${API_BASE_URL}/api/bookings/${id}/status`, {
         status,
       });
       fetchData();
@@ -122,7 +124,7 @@ const AdminDashboard = () => {
   const handleDeleteTour = async (id) => {
     if (window.confirm("Are you sure you want to delete this tour package?")) {
       try {
-        await axios.delete(`https://ishikatours-1.onrender.com/api/tours/${id}`);
+        await axios.delete(`${API_BASE_URL}/api/tours/${id}`);
         fetchData();
       } catch (err) {
         console.error("Delete Error:", err);
@@ -141,7 +143,7 @@ const AdminDashboard = () => {
           ? formData.inclusions.split(",").map((item) => item.trim())
           : [],
       };
-      await axios.post("https://ishikatours-1.onrender.com/api/tours", payload);
+      await axios.post(`${API_BASE_URL}/api/tours`, payload);
       alert("Tour package created successfully!");
       setShowAddModal(false);
       setFormData({
@@ -336,7 +338,7 @@ const AdminDashboard = () => {
               </button>
             </nav>
 
-            <div className="bg-white/5 p-3 rounded-xl border border-white/10/60 text-[11px] text-slate-400">
+            <div className="bg-white/5 p-3 rounded-xl border border-white/10 text-[11px] text-slate-400">
               <p className="font-bold text-slate-300">Admin Account</p>
               <p className="truncate text-[10px] text-slate-400">
                 admin@ishikatravels.com
@@ -399,7 +401,7 @@ const AdminDashboard = () => {
                   </div>
                 ) : (
                   <>
-                    {/* A. MOBILE VIEW: TOUCH CARDS (NO HORIZONTAL OVERFLOW) */}
+                    {/* A. MOBILE VIEW: TOUCH CARDS */}
                     <div className="grid grid-cols-1 gap-3 sm:hidden">
                       {bookings.map((b) => (
                         <div
@@ -643,7 +645,7 @@ const AdminDashboard = () => {
               </div>
             )}
 
-            {/* MODAL: FULL MOBILE RESPONSIVE ADD TOUR POPUP */}
+            {/* MODAL: ADD TOUR POPUP */}
             {showAddModal && (
               <div className="fixed inset-0 bg-[#020617]/70 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
                 <div className="bg-white rounded-3xl max-w-2xl w-full p-5 sm:p-7 max-h-[90vh] overflow-y-auto shadow-[0_25px_90px_rgba(0,0,0,0.3)] border border-slate-200/80">

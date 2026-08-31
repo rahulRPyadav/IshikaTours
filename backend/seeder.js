@@ -1,35 +1,53 @@
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
-// User model import karein (jo bhi aapka path ho)
-const User = require('./models/User'); 
 
-// Temporary 1-Click Admin Creator Route
-app.get('/api/create-admin-now', async (req, res) => {
+dotenv.config();
+
+// User Schema & Model define locally to avoid export mismatch
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ['user', 'admin'], default: 'user' }
+}, { timestamps: true });
+
+const User = mongoose.models.User || mongoose.model('User', userSchema);
+
+const resetAndCreateAdmin = async () => {
   try {
-    const adminEmail = 'ishika.travels4379@gmail.com';
-    const adminPassword = 'Admin@1234';
+    // Wait for connection to establish properly
+    await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/ishika_travels');
+    console.log(' Connected to MongoDB');
 
-    // Delete existing admin if any to avoid conflict
-    await User.deleteOne({ email: adminEmail });
+    // 1. Purana Admin account clean karein
+    await User.deleteMany({ email: 'admin@ishikatravels.com' });
+    console.log(' Purana Admin account reset kar diya gaya.');
 
-    // Hash Password
+    // 2. Fresh Password Hash
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(adminPassword, salt);
+    const hashedPassword = await bcrypt.hash('admin123', salt);
 
-    // Create New Admin
-    const newAdmin = await User.create({
+    // 3. Naya Admin Create karein
+    await User.create({
       name: 'Ishika Admin',
-      email: adminEmail,
+      email: 'admin@ishikatravels.com',
       password: hashedPassword,
       role: 'admin'
     });
 
-    res.status(200).json({
-      success: true,
-      message: '✅ Admin created successfully!',
-      email: adminEmail,
-      password: adminPassword
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.log(' FRESH ADMIN ACCOUNT CREATED SUCCESSFULLY!');
+    console.log('-------------------------------------------');
+    console.log(' Email: admin@ishikatravels.com');
+    console.log(' Password: admin123');
+    console.log('-------------------------------------------');
+
+    await mongoose.connection.close();
+    process.exit(0);
+  } catch (error) {
+    console.error(' Error creating admin:', error);
+    process.exit(1);
   }
-});
+};
+
+resetAndCreateAdmin();
